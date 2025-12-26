@@ -2,88 +2,40 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Product URL</title>
-
-  <script src="https://unpkg.com/@akeneo-pim-community/bridge@latest/dist/index.umd.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    label {
-      font-weight: bold;
-    }
-    input {
-      width: 420px;
-      padding: 6px;
-    }
-    .icon-btn {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #ccc;
-      background: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .icon-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    svg {
-      width: 16px;
-      height: 16px;
-      fill: #555;
-    }
-  </style>
 </head>
-
 <body>
-  <label>Product URL:</label>
-  <input id="productUrl" placeholder="Enter product URL manually" />
-  <button id="openUrl" class="icon-btn" disabled title="Open URL">
-    <svg viewBox="0 0 24 24">
-      <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/>
-      <path d="M5 5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z"/>
-    </svg>
-  </button>
+<script>
+/**
+ * Akeneo sends context automatically
+ * We READ the attribute value and display it
+ */
+const context = window.uiExtension?.context || {};
 
-  <script>
-    AkeneoBridge.init().then((bridge) => {
-      const input = document.getElementById('productUrl');
-      const button = document.getElementById('openUrl');
-      const channel = bridge.context.channel;
+const currentValue =
+  context?.values?.product_url?.[context.channel]?.[context.locale] ?? '';
 
-      bridge.getProductValues().then(values => {
-        const url =
-          values.product_url?.find(v => v.scope === channel)?.data || '';
-        input.value = url;
-        button.disabled = !url;
-      });
+const response = {
+  type: "form",
+  label: "Product URL",
+  fields: [
+    {
+      code: "product_url",
+      label: "Product URL",
+      type: "text",
+      value: currentValue,
+      placeholder: "Enter product URL manually",
+      actions: [
+        {
+          type: "open_url",
+          icon: "external-link"
+        }
+      ]
+    }
+  ]
+};
 
-      input.addEventListener('change', e => {
-        const url = e.target.value.trim();
-        bridge.setProductValues({
-          product_url: [{
-            scope: channel,
-            locale: null,
-            data: url
-          }]
-        });
-        button.disabled = !url;
-      });
-
-      button.addEventListener('click', () => {
-        const url = input.value.trim();
-        if (url) window.open(url, '_blank');
-      });
-    });
-  </script>
+document.write(JSON.stringify(response));
+</script>
 </body>
 </html>
+
