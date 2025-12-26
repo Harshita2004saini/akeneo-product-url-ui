@@ -1,41 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-</head>
-<body>
-<script>
-/**
- * Akeneo sends context automatically
- * We READ the attribute value and display it
- */
-const context = window.uiExtension?.context || {};
+  <title>Product URL Extension</title>
 
-const currentValue =
-  context?.values?.product_url?.[context.channel]?.[context.locale] ?? '';
+  <!-- Akeneo UI Extension SDK -->
+  <script src="https://unpkg.com/@akeneo-pim-community/ui-extension-sdk@latest/dist/ui-extension-sdk.min.js"></script>
 
-const response = {
-  type: "form",
-  label: "Product URL",
-  fields: [
-    {
-      code: "product_url",
-      label: "Product URL",
-      type: "text",
-      value: currentValue,
-      placeholder: "Enter product URL manually",
-      actions: [
-        {
-          type: "open_url",
-          icon: "external-link"
-        }
-      ]
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 12px;
     }
-  ]
-};
+    input {
+      width: 420px;
+      padding: 6px;
+      font-size: 14px;
+    }
+    button {
+      margin-left: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
 
-document.write(JSON.stringify(response));
-</script>
-</body>
-</html>
+<body>
+  <label><b>Product URL:</b></label><br/><br/>
+  <input
+    id="urlInput"
+    type="url"
+    placeholder="Enter product URL manually"
+  />
+  <button id="openBtn">🔗</button>
 
+  <script>
+    AkeneoUiExtension.init().then
