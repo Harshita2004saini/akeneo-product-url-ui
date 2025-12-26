@@ -2,37 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Product URL Extension</title>
-
-  <!-- Akeneo UI Extension SDK -->
-  <script src="https://unpkg.com/@akeneo-pim-community/ui-extension-sdk@latest/dist/ui-extension-sdk.min.js"></script>
-
+  <title>Product URL</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 12px;
+      padding: 16px;
     }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     input {
-      width: 420px;
-      padding: 6px;
+      flex: 1;
+      padding: 8px;
       font-size: 14px;
     }
+
     button {
-      margin-left: 6px;
-      padding: 6px 10px;
       cursor: pointer;
+      padding: 8px 10px;
+      font-size: 16px;
     }
   </style>
 </head>
-
 <body>
-  <label><b>Product URL:</b></label><br/><br/>
-  <input
-    id="urlInput"
-    type="url"
-    placeholder="Enter product URL manually"
-  />
-  <button id="openBtn">🔗</button>
+
+  <div class="row">
+    <strong>Product URL:</strong>
+    <input
+      id="productUrl"
+      type="url"
+      placeholder="Enter product URL"
+    />
+
+    <button onclick="openLink()" title="Open link">
+      🔗
+    </button>
+  </div>
 
   <script>
-    AkeneoUiExtension.init().then
+    function openLink() {
+      const url = document.getElementById('productUrl').value;
+
+      if (!url) {
+        alert('Please enter a URL first');
+        return;
+      }
+
+      if (!url.startsWith('http')) {
+        alert('URL must start with http or https');
+        return;
+      }
+
+      window.open(url, '_blank', 'noopener');
+    }
+  </script>
+
+</body>
+</html>
